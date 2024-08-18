@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+
+    <style>
+       
+
+        .table-container {
+            margin: 0 auto;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .table thead th {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid #007BFF;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table tbody td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table tbody p {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        .table thead th, .table tbody td {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container" >
+
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        
+        <h2 >Admin Dashboard</h2>
+
+ <!-- All Students, Fees, and Notes Table -->
+ <div class="section">
+    <h3>All Students Information</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Fees Paid</th>
+                <th>Total Fees</th>
+                <th>Note Title</th>
+                <th>Note Content</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.user.username }}</td>
+                <td>
+                    {% if student.school_fee %}
+                        {{ student.school_fee.fee_paid }}
+                    {% else %}
+                        Not Set
+                    {% endif %}
+                </td>
+                <td>
+                    {% if student.school_fee %}
+                        {{ student.school_fee.total_fee }}
+                    {% else %}
+                        Not Set
+                    {% endif %}
+                </td>
+                <td>
+                    {% if student.notes.exists %}
+                        {% for note in student.notes.all %}
+                            <p>{{ note.title }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Notes</p>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if student.notes.exists %}
+                        {% for note in student.notes.all %}
+                            <p>{{ note.content }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Notes</p>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+
+        <!-- Existing Sections -->
+        <div class="section">
+            <h3>Manage Students</h3>
+            <ul>
+                {% for student in students %}
+                <li>{{ student.user.username }}
+                    <form method="post" class="inline-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="student_id" value="{{ student.id }}">
+                        <button type="submit" name="delete_student">Delete</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Set Student Fees</h3>
+            <form method="post">
+                {% csrf_token %}
+                <select name="student_id">
+                    {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.user.username }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" step="0.01" name="total_fee" placeholder="Total Fee" required>
+                <input type="number" step="0.01" name="fee_paid" placeholder="Fee Paid" required>
+                <button type="submit" name="set_fee">Set Fee</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h3>Share Files with Students</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <select name="student_id">
+                    {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.user.username }}</option>
+                    {% endfor %}
+                </select>
+                <input type="file" name="file" required>
+                <input type="text" name="description" placeholder="File Description" required>
+                <button type="submit" name="share_file">Share File</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h3>Assign Tasks to Students</h3>
+            <form method="post">
+                {% csrf_token %}
+                <select name="student_id">
+                    {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.user.username }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="title" placeholder="Assignment Title" required>
+                <textarea name="description" placeholder="Assignment Description" required></textarea>
+                <button type="submit" name="assign_task">Assign Task</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h3>Approve or Reject Assignments</h3>
+            <ul>
+                {% for assignment in assignments %}
+                <li>
+                    {{ assignment.title }} - Completed: {{ assignment.is_completed }}
+                    <form method="post" class="inline-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="assignment_id" value="{{ assignment.id }}">
+                        {% if not assignment.is_completed %}
+                        <button type="submit" name="approve_assignment">Approve</button>
+                        {% else %}
+                        <button type="submit" name="reject_assignment">Reject</button>
+                        {% endif %}
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+
+        <!-- Logout Link -->
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</body>
+</html>

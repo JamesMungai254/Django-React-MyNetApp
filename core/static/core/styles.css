@@ -1,0 +1,194 @@
+/* Add this CSS to your styles.css or within a <style> tag in your HTML */
+body {
+    
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    
+    width: 90%; /* Occupies 90% of the page width */
+    max-width: 1200px; /* Optional: Limits the maximum width */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* Ensure full height and centering content */
+html, body {
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Section Styles */
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.section {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.form-section, .notes-section, .fees-section, .files-section, .assignments-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input, textarea, select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.inline-form {
+    display: inline;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+/* Existing styles */
+
+.profile-picture {
+    width: 40px; /* Reduced size */
+    height: 40px; /* Reduced size */
+    border-radius: 50%;
+    margin-left: 15px;
+    object-fit: cover; /* Ensures the image maintains aspect ratio */
+}
+
+/* Add any other relevant styles */
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Table styling */
+table.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table.table th, table.table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table.table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #555;
+}
+
+table.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+table.table td p {
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    table.table th, table.table td {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+
+    form select, form input[type="number"], form input[type="text"], form textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+

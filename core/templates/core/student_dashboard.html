@@ -1,0 +1,105 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body>
+    
+    <div class="container">
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <!-- Top Navigation Bar --><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <header>
+            <div class="header-content">
+                <h1>Welcome, {{request.user.username}}!</h1>
+                {% if user.student_profile.profile_picture %}
+                    <img src="{{ user.student_profile.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                {% else %}
+                    <img src="{% static 'core/default_profile.png' %}" alt="Default Profile Picture" class="profile-picture">
+                {% endif %}
+            </div>
+        </header>
+
+        <main>
+            <!-- Profile Picture Upload Form -->
+            <section class="upload-section">
+                <h3>Upload Profile Picture</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" name="upload_picture">Upload Picture</button>
+                </form>
+            </section>
+            <!-- Note Creation Form -->
+            <section class="notes-section">
+                <h3>Create a New Note</h3>
+                <form method="POST" action="{% url 'student_dashboard' %}">
+                    {% csrf_token %}
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+                    <label for="content">Content:</label>
+                    <textarea id="content" name="content" rows="4" required></textarea>
+                    <button type="submit" name="create_note">Create Note</button>
+                </form>
+            </section>
+
+            <!-- Display Notes -->
+            <section class="notes-display-section">
+                <h3>Your Notes</h3>
+                <ul>
+                    {% for note in notes %}
+                    <li>
+                        {{ note.title }}: {{ note.content }}
+                        <form method="POST" action="{% url 'student_dashboard' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="note_id" value="{{ note.id }}">
+                            <button type="submit" name="delete_note">Delete</button>
+                        </form>
+                    </li>
+                    {% empty %}
+                    <li>No notes found.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <!-- School Fees -->
+            <section class="fees-section">
+                <h3>School Fees</h3>
+                {% if fees %}
+                    <p>Total Fee: {{ fees.total_fee }}</p>
+                    <p>Fee Paid: {{ fees.fee_paid }}</p>
+                {% else %}
+                    <p>No fee record found.</p>
+                {% endif %}
+            </section>
+
+            <!-- Shared Files -->
+            <section class="shared-files-section">
+                <h3>Shared Files</h3>
+                <ul>
+                    {% for file in shared_files %}
+                    <li><a href="{{ file.file.url }}">{{ file.description }}</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <!-- Assignments -->
+            <section class="assignments-section">
+                <h3>Assignments</h3>
+                <ul>
+                    {% for assignment in assignments %}
+                    <li>
+                        {{ assignment.title }} - {{ assignment.description }} - Completed: {{ assignment.is_completed }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
